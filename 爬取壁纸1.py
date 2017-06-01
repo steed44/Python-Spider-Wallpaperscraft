@@ -9,7 +9,7 @@ import time
 
 
 root = 'H://pic//'      #设置图片保存位置（如需更改，要按固定格式）
-starPage = 47            #设置爬取起始页（首页是1）
+starPage = 1            #设置爬取起始页（首页是1）
 endPage = 70             #设置爬取终止页（最终页可以到网站查看）
 resolutio = "2560x1080" #设置你需要的分辨率（注意乘号‘x’的格式），要保证分辨率是壁纸网站所用有的
 kv = {'user-agent':'Mozilla/5.0'}  #设置模拟的浏览器
@@ -35,7 +35,7 @@ def parsePage():
         html = ""
         print("1")
         while len(mainPageList) == 0:
-            time.sleep(50)
+            time.sleep(2)
             
         url = mainPageList.pop()
         print("11"+url)
@@ -52,7 +52,8 @@ def parsePage():
         for i in range(1,21):
             wallPaperList.append('https:' + ilt[i].get('href'))
             print('https:' + ilt[i].get('href'))
-    
+        if lock == 0:
+            break
 
 #解析子页，提取高清图片下载地址  
 def parseDownAdd():
@@ -60,7 +61,7 @@ def parseDownAdd():
         html = ""
         n = 5
         while len(wallPaperList) == 0:
-            time.sleep(500)
+            time.sleep(2)
             
         url = wallPaperList.pop()
         
@@ -81,7 +82,8 @@ def parseDownAdd():
             if m == 0: 
                 wallPaperList.inster(1,url)
                 break
-
+        if lock == 0:
+            break
 #下载图片并保存到本地
 def downPic(picURL,root):
     path = root + picURL.split('/')[-1]
@@ -118,7 +120,7 @@ def main():
     for i in range(starPage,endPage+1):
        try:
            while len(mainPageList) > 5 :
-               time.sleep(500)
+               time.sleep(2)
            if i == 1:
                #html = getHTMLText(start_url)
                mainPageList.append(start_url)
@@ -127,10 +129,13 @@ def main():
                print(url)
                #html = getHTMLText(url)
                mainPageList.append(url)
+    
            #parsePage(html)
        except:
             continue
-
+    while len(mainPageList) != 0 or len(wallPaperList) != 0:
+        time.sleep(2)
+    lock = 0
 main()
 
     
